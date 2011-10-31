@@ -1,0 +1,17 @@
+Battle murmur/mumble switcher.
+
+This is intended to be for server operaters, who have a murmur instance running.
+
+It requires ICE to be installed on your murmur instance. For information on how to do this, please use:
+http://mumble.sourceforge.net/Ice
+
+Once that is all active, test out the sample scripts you have with your Mumble to see that it's working ok.
+
+With that all good, put my php file up on a instance that has murmur on the server, and then access it from the web. 
+
+Change the testusername 
+
+Todo:
+- Grab users for a single channel instead of globally
+- Hardcode a list of mumble usernames/battlelog id's to move forward
+- Battlelog json parsing (per user most likely)
