@@ -42,7 +42,7 @@ curl_setopt($ch, CURLOPT_USERAGENT, 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WO
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 $loginresult = curl_exec($ch);
 
-
+echo "<br> Curl Error for " . $info['url'] . " : " . curl_errno($ch) . " <br>";
 echo "<br><h3>Attempting login</h3>" . curl_getinfo ($ch, CURLINFO_HTTP_CODE) . " - Is the resulting code. 302 is a redirect, 200 is ok.";
 
 
@@ -68,19 +68,23 @@ $context = stream_context_create(array(
 
 function BF3SoldierInfo($soldierId)
 {
-		$ch = curl_init($baseUrl . "overviewPopulateStats/$soldierId/None/1/");
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookies.txt');
-		curl_setopt($ch, CURLOPT_USERAGENT, 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0');
-		$soldierData = curl_exec($ch);
-		
-		echo "<br><h3>Attempting soldier request.</h3>" . curl_getinfo ($ch, CURLINFO_HTTP_CODE) . " - Is the resulting code. 302 is a redirect, 200 is ok.";
-		echo $soldierData;
-		var_dump($soldierData);
-		
-		
-		curl_close($ch);
-		
+	$url = 'https://battlelog.battlefield.com/bf3/' . "overviewPopulateStats/$soldierId/None/1/";
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookies.txt');
+	curl_setopt($ch, CURLOPT_USERAGENT, 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0');
+	$soldierData = curl_exec($ch);
+	
+	echo "<br><h3>Attempting soldier request.</h3>" . curl_getinfo ($ch, CURLINFO_HTTP_CODE) . " - Is the resulting code. 302 is a redirect, 200 is ok.";
+	$info = curl_getinfo($ch);
+
+	echo "<br> Curl Error for " . $info['url'] . " : " . curl_errno($ch) . " <br>";
+	echo "<br>" . $soldierData;
+	var_dump($soldierData);
+	$jsonSoldier = json_encode($soldierData);
+	var_dump($jsonSoldier);
+	
+	curl_close($ch);
 		
 }
 
