@@ -68,9 +68,13 @@ $context = stream_context_create(array(
 
 function BF3SoldierInfo($soldierId)
 {
+
 	$url = 'https://battlelog.battlefield.com/bf3/' . "overviewPopulateStats/$soldierId/None/1/";
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	//curl_setopt($ch, CURLOPT_POST, 1);
+	//curl_setopt($ch, CURLOPT_POSTFIELDS, $postchars);
+	curl_setopt($ch, CURLOPT_HTTPHEADER,array('X-Requested-With: XMLHttpRequest','X-AjaxNavigation: 1'));
 	curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookies.txt');
 	curl_setopt($ch, CURLOPT_USERAGENT, 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0) Gecko/20100101 Firefox/8.0');
 	$soldierData = curl_exec($ch);
@@ -82,7 +86,10 @@ function BF3SoldierInfo($soldierId)
 	echo "<br>" . $soldierData;
 	var_dump($soldierData);
 	$jsonSoldier = json_encode($soldierData);
-	var_dump($jsonSoldier);
+	print_r($jsonSoldier);
+	
+	echo $jsonSoldier['type']  . " ";
+	echo $jsonSoldier['user']['username']  . " ";
 	
 	curl_close($ch);
 		
