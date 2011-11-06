@@ -48,7 +48,7 @@ $scanchannel = "Servers";
 $afkroom = "afk";
 $idle = 240;
 
-$testusername = "SuperRoach";
+//$testusername = "SuperRoach";
 
 // UserID in murmur=>NewChannelID
 $tomove = array();
@@ -75,15 +75,25 @@ foreach ($allplayers as $u) {
 
 		if ($debug) echo "About to move $u->name <br>" ; 
 		
+		
+		
 		// Set their room
-		if ($state && $u->name == $testusername) {
-			
-			echo "Moving";
-			$tomove[$u->session] = $newroom;
-			
-			//To Move Immediately.
-			//$state->channel = $newroom;
-			//$s->setState($state);
+		if ($state) {	
+			if (empty($testusername))
+			{
+				echo "Moving";
+				$tomove[$u->session] = $newroom;
+				
+				//To Move Immediately.
+				//$state->channel = $newroom;
+				//$s->setState($state);
+			} else
+			{
+				if ($testusername == $u->name)
+				{
+					$tomove[$u->session] = $newroom;
+				}
+			}
 		}
 	}
 }
