@@ -1,0 +1,183 @@
+<html>
+<head>
+<title>Sample Script</title>
+</head>
+<body>
+<?php
+
+// the Battlelog Class
+require 'userstats.php';
+// Proof of concept code to allow for a Murmur server to be controlled based on what server a player is in.
+
+$email	= $_GET['email'];
+$password = $_GET['password'];
+
+$battleLog = new battleLog($email, $password);
+
+
+
+
+// 	Todo: Grab the battlelog data. 
+// Currently to do this will mean a key / name array will need to be stored somewhere, 
+// as we don't have a way to get battlelog id's based on a name in mumble.
+
+$debug = true;
+
+// It helps to get users to register the name you hardcode, so they can't be spoofed.
+$HardCodedUsers = Array("SuperRoach"=>"235161522", "FuLlTiM3KiLlA"=>"174575108");
+// By name.
+$HardCodedUsers = Array("SuperRoach"=>"SuperRoach", "FuLlTiM3KiLlA"=>"FuLlTiM3KiLlA");
+
+
+
+Ice_loadProfile();  // This requires you to have ice installed on your server which is running murmur.
+
+try {
+  $base = $ICE->stringToProxy("Meta:tcp -h 127.0.0.1 -p 6502");
+  $meta = $base->ice_checkedCast("::Murmur::Meta");
+
+  $servers = $meta->getBootedServers();
+  $default = $meta->getDefaultConf();
+  foreach($servers as $s) {
+    $name = $s->getConf("registername");
+
+    if (! $name) {
+      $name =  $default["registername"];
+    }
+
+	var_dump($s);
+    // $s->sendMessageChannel(0,true,"User <b>SuperRoach</b> has joined BF3 Server, preparing to move");
+  
+    // $s->addChannel("Test New BF3 Server Connection Guid #",46);  // 46 is the "servers" one.
+
+// TODO: Make this get the users of a channel instead of globally.
+$allplayers = $s->getUsers();
+$allchannels = $s->getChannels();
+$chan = $channels[$state->channel];
+
+$newroom = 46;
+$scanchannel = "Servers";
+$afkroom = "afk";
+$idle = 240;
+
+//$testusername = "SuperRoach";
+
+// UserID in murmur=>NewChannelID
+$toMove 	= array();
+$gameServer	= array();
+
+foreach ($allplayers as $u) {
+
+	$worthscanning = false;
+
+	if ($debug) printf("%s: %s\n", $u->name, $u->idlesecs);
+	if ($debug) var_dump($u->channel);
+	if ($debug) echo $u->session . "<br>";
+
+		
+	// Get the persons information in murmur
+	$state = $s->getState($u->session);
+	
+	$chan = $allchannels[$state->channel];
+
+	// First level check for people
+	echo $chan->name . "   <b>..-..</b>   " . $scanchannel . " ";	
+	
+	//echo "<h6>testing channel: </h6>" . $u->channel . " | ".  $chan->name ;
+	if ($u->idlesecs < $idle && $chan->name == $scanchannel && $u->channel != $afk) {
+
+		if ($debug) echo "About to move $u->name <br>" ; 
+		
+		// Check their Status on Battlelog
+		$soldierStatus = $battleLog->SoldierOverview($soldier);
+
+		$newServer = null;
+		if ($battleLog->isPlaying)
+		{
+			$newServer = $battleLog->serverName;
+		}
+
+		// Should abstract the creation/deletion of channels.
+		// If the server hasn't been seen before, add it to the array. Playercount for server is at the end.
+		isset($gameServer[$newServer])?$gameServer[$newServer]++:$gameServer[$newServer]=1;
+
+		
+		
+		
+		// Set their room
+		if ($state) {	
+			if (empty($testusername))
+			{
+				echo "Moving";
+				$toMove[$u->session] = $newroom;
+				
+				//To Move Immediately.
+				//$state->channel = $newroom;
+				//$s->setState($state);
+			} else
+			{
+			
+			
+				if ($testusername == $u->name)
+				{
+					$toMove[$u->session] = $newroom;
+				}
+			}
+		}
+	}
+}
+
+	// Channel creation
+	echo "<h2>Channel creation";
+	
+	foreach ($gameServer as $key => $value)
+	{
+		$s->addChannel($key,46);  // 46 is the "servers" one.
+	}
+	
+	// Moving list
+	echo "<h2>This is the list of ID's / People to move (from <i>$scanchannel)</i></h2>" . print_r($toMove);
+
+	// We have a userlist, now lets move them.
+
+	foreach ($toMove as $key => $value)
+	{
+
+		//print_r($allplayers[$key]);
+		echo "Looking at: " . $allplayers[$key]->name;
+		echo "<br>" . $key . " " . $value; // Gives me value of 10	
+		
+	}
+
+	// Debug information.
+
+    echo "<h1>SERVER #" . $s->id() . " " .$name ."</h1>\n";
+    echo "<table><tr><th>Name</th><th>Channel</th></tr>\n";
+    $channels = $s->getChannels();
+	
+    $players = $s->getUsers();
+
+	//var_dump($channels);
+
+	//print_r($players);
+	print( count($players) );
+	
+    foreach($players as $id => $state) {
+	//var_dump($id);
+      $chan = $channels[$state->channel];
+      echo "<tr><td>".$state->name."</td><td>".$chan->name." <i>(id: ". $chan->id .")</i></td></tr>\n";
+    }
+    echo "</table>\n";
+	
+	
+  // Per server option finished
+  }
+
+  // We've tried but found a problem to connect to the ice server!
+  } catch (Ice_LocalException $ex) {
+  print_r($ex);
+}
+
+?>
+</body>
+</html>

@@ -3,7 +3,7 @@
 $email	= $_GET['email'];
 $password = $_GET['password'];
 
-class Battlelog
+class battleLog
 {
 	public $baseUrl;
 	public $debug;
@@ -97,7 +97,7 @@ class Battlelog
 
 	echo "<pre>";
 	// Uncomment this for the whole shebang.
-	 if ($this->debug) print_r($soldierData);
+	// if ($this->debug) print_r($soldierData);
 	echo "</pre>";
 
 	curl_close($ch);
@@ -185,7 +185,8 @@ if (!empty($_GET['soldier']))
 
 //$ret = file_get_contents($url, false, $context); 
 
-$test = new Battlelog($email, $password);
+/*
+$test = new battleLog($email, $password);
 $soldierStatus = $test->SoldierOverview($soldier);
 
 $newServer = null;
@@ -195,7 +196,6 @@ if ($test->isPlaying)
 }
 
 echo $newServer;
-	//public $serverName;
-	//public $isPlaying;
+*/
 
 ?>
