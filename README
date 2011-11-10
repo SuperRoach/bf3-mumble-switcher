@@ -11,7 +11,7 @@ With that all good, put my php file up on a instance that has murmur on the serv
 
 	Running the script:
 You can use this with cron to run as often as you would like.
-	/usr/bin/wget --quiet "http://mumble.brettjames.au.com/samplecreation.php?email=YOURBATTLELOG@EMAIL.COM&password=YOURPASS"    
+	/usr/bin/wget --quiet "http://yourserverlocation.com/samplecreation.php?email=YOURBATTLELOG@EMAIL.COM&password=YOURPASS"    
 Note the need to specify your battlelog email and password, which is needed to access the API itself.
 
 Change the $testusername if you want to enforce that to only work for yourself. There are a few variables near the start you can change.
