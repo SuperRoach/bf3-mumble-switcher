@@ -1,8 +1,11 @@
 <html>
 <head>
-<title>Userlist</title>
+<title>Basic information script for mumble stuff</title>
 </head>
 <body>
+<h1>Information</h1>
+<p>You will need to specify the channel to scan in to find the players and to create the channels</p>
+<p>a lazy way to do this is to run this page on your server, and see jump into the base channel you've created. An id will pop up below, which you will use for $scanchannelID </p>
 <?php
 // Proof of concept code to allow for a Murmur server to be controlled based on what server a player is in.
 
@@ -29,6 +32,11 @@ try {
   foreach($servers as $s) {
     $name = $s->getConf("registername");
 
+	// This below could have been a way to grab info about a channel and its children, but needs a context :/
+	//	$thetestchannel = $s->getChannelState(46);
+	//	print_r($s->getTree($thetestchannel) );
+
+
     if (! $name) {
       $name =  $default["registername"];
     }
@@ -37,13 +45,16 @@ try {
     // $s->sendMessageChannel(0,true,"User <b>SuperRoach</b> has joined BF3 Server, preparing to move");
   
     // $s->addChannel("Test New BF3 Server Connection Guid #",46);  // 46 is the "servers" one.
+	
+	$vartest = $s->addChannel("Test New BF3 Server Connection Guid #2",46);  // 46 is the "servers" one.
+	echo "<br>moderately". $vartest ."<br>";	
 
 // TODO: Make this get the users of a channel instead of globally.
 $allplayers = $s->getUsers();
 $allchannels = $s->getChannels();
 $chan = $channels[$state->channel];
 
-$newroom = 46;
+$scanchannelID = 46;
 $scanchannel = "Servers";
 $afkroom = "afk";
 $idle = 240;
@@ -52,6 +63,18 @@ $idle = 240;
 
 // UserID in murmur=>NewChannelID
 $tomove = array();
+
+// We need to make a list of channels that already exist.
+$existingchannels = array();
+
+// Lets assemble currently existing serverrooms.
+foreach ($allchannels as $chan)
+{
+	if ($chan->parent == $scanchannelID)
+	{
+		$existingchannels[$chan->name] = $chan->id;
+	}
+}
 
 foreach ($allplayers as $u) {
 
@@ -82,16 +105,16 @@ foreach ($allplayers as $u) {
 			if (empty($testusername))
 			{
 				echo "Moving";
-				$tomove[$u->session] = $newroom;
+				$tomove[$u->session] = $scanchannelID;
 				
 				//To Move Immediately.
-				//$state->channel = $newroom;
+				//$state->channel = $scanchannelID;
 				//$s->setState($state);
 			} else
 			{
 				if ($testusername == $u->name)
 				{
-					$tomove[$u->session] = $newroom;
+					$tomove[$u->session] = $scanchannelID;
 				}
 			}
 		}

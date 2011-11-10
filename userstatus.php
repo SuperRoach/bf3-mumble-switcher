@@ -54,7 +54,7 @@ class battleLog
 	}
  
 
- public function SoldierOverview($soldierID)
+ public function SoldierOverview($soldierName)
  {
  //http://battlelog.battlefield.com/bf3/user/overviewBoxStats/2832660534553355381/
 	$url = $this->baseUrl . "user/superroach/";
@@ -63,6 +63,7 @@ class battleLog
 	$url = $this->baseUrl . "user/bb_turn/";
 	$url = $this->baseUrl . "user/DrMon/";
 	$url = $this->baseUrl . "user/-Vultur3z-/";
+	$url = $this->baseUrl . "user/$soldierName/";
 	echo $url;
 	
 	$ch = curl_init($url);

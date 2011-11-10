@@ -9,9 +9,16 @@ Once that is all active, test out the sample scripts you have with your Mumble t
 
 With that all good, put my php file up on a instance that has murmur on the server, and then access it from the web. 
 
-Change the testusername 
+	Running the script:
+You can use this with cron to run as often as you would like.
+	/usr/bin/wget --quiet "http://mumble.brettjames.au.com/samplecreation.php?email=YOURBATTLELOG@EMAIL.COM&password=YOURPASS"    
+Note the need to specify your battlelog email and password, which is needed to access the API itself.
 
+Change the $testusername if you want to enforce that to only work for yourself. There are a few variables near the start you can change.
+
+	
 Todo:
-- Grab users for a single channel instead of globally
-- Hardcode a list of mumble usernames/battlelog id's to move forward
-- Battlelog json parsing (per user most likely)
+- Grab users for a single channel instead of globally 
+- Hardcode a list of mumble usernames/battlelog id's to move forward  (done)
+- Battlelog json parsing (per user most likely)  (done)
+- Make channels be removed when they are empty (temp flag isn't implemented in murmur yet, will need to work around)
