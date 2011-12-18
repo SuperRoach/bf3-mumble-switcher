@@ -1,7 +1,25 @@
 <?php
 
-$email	= $_GET['email'];
-$password = $_GET['password'];
+/*
+	We should allow for overriding of the script password for testing by specifying a parameter. call it by adding 
+	?password=xx&email=your@email.com 
+ */
+
+ if (!isset($_GET) || empty($_GET))
+{
+	$email	= $_GET['email'];
+	$password = $_GET['password'];
+}
+else
+{
+/*	If you are running it on your server and want to hide logs seeing your info, 
+	you can edit the ones below to contain your password and email.
+*/
+
+	$email	= "sampleemail@address.com.au";
+	$password = "samplepassword";
+}
+
 
 class battleLog
 {
